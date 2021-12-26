@@ -3,22 +3,15 @@ package com.example.androidbdd.utils
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
-import java.util.*
-import java.util.concurrent.CountDownLatch
 
 class ActivityFinisher private constructor() : Runnable {
 
-    private val activityLifecycleMonitor: ActivityLifecycleMonitor = ActivityLifecycleMonitorRegistry.getInstance()
-    private var latch: CountDownLatch? = null
-    private var activities: MutableList<Activity>? = null
-
-    constructor(latch: CountDownLatch?, activities: MutableList<Activity>?) : this() {
-        this.latch = latch
-        this.activities = activities
-    }
+    private val activityLifecycleMonitor: ActivityLifecycleMonitor =
+        ActivityLifecycleMonitorRegistry.getInstance()
 
     companion object {
         fun finishOpenActivities() {
@@ -27,19 +20,26 @@ class ActivityFinisher private constructor() : Runnable {
     }
 
     override fun run() {
-        val activities = this.activities ?: mutableListOf()
+        val activities: MutableList<Activity> = emptyList<Activity>().toMutableList()
 
-        for (stage in EnumSet.range(Stage.CREATED, Stage.STOPPED)) {
+        val stages = arrayOf<Stage>(
+            Stage.CREATED,
+            Stage.STOPPED,
+            Stage.PAUSED,
+            Stage.STARTED,
+            Stage.RESUMED,
+            Stage.RESTARTED,
+            Stage.PRE_ON_CREATE
+        )
+
+        for (stage in stages) {
             activities.addAll(activityLifecycleMonitor.getActivitiesInStage(stage))
         }
 
-        if (latch != null) {
-            latch?.countDown()
-        } else {
-            for (activity in activities) {
-                if (!activity.isFinishing) {
-                    activity.finish()
-                }
+        for (activity in activities) {
+            InstrumentationRegistry.getInstrumentation().callActivityOnStop(activity)
+            if (!activity.isFinishing) {
+                activity.finish()
             }
         }
     }
