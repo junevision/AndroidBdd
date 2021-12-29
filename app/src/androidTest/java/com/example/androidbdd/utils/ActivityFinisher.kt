@@ -22,7 +22,7 @@ class ActivityFinisher private constructor() : Runnable {
     override fun run() {
         val activities: MutableList<Activity> = emptyList<Activity>().toMutableList()
 
-        val stages = arrayOf<Stage>(
+        val stages = arrayOf(
             Stage.CREATED,
             Stage.STOPPED,
             Stage.PAUSED,

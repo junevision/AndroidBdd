@@ -1,6 +1,7 @@
 package com.example.androidbdd.di
 
 import com.example.androidbdd.pageobjects.LoginScreen
+import com.example.androidbdd.setup.LaunchApp
 import io.cucumber.core.backend.ObjectFactory
 import io.cucumber.picocontainer.PicoFactory
 
@@ -10,6 +11,7 @@ class BddFactory : ObjectFactory {
     private val delegate = PicoFactory()
 
     init {
+        addClass(LaunchApp::class.java)
         addClass(LoginScreen::class.java)
     }
 

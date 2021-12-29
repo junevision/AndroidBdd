@@ -1,9 +1,7 @@
 package com.example.androidbdd.cucumber.steps
 
-import android.content.Intent
-import androidx.test.rule.ActivityTestRule
 import com.example.androidbdd.pageobjects.LoginScreen
-import com.example.androidbdd.ui.login.LoginActivity
+import com.example.androidbdd.setup.LaunchApp
 import com.example.androidbdd.utils.ActivityFinisher
 import io.cucumber.java.After
 import io.cucumber.java.Before
@@ -11,26 +9,18 @@ import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
-import io.qameta.allure.android.rules.ScreenshotRule
 import io.qameta.allure.kotlin.Allure
-import org.junit.Rule
 import org.picocontainer.annotations.Inject
 
 
 class LoginSteps {
 
-    @Inject
-    lateinit var loginObject: LoginScreen
-
-    @get:Rule
-    val logcatRule = ScreenshotRule(mode = ScreenshotRule.Mode.END, screenshotName = "ss_end")
-
-    val mActivityRule = ActivityTestRule(LoginActivity::class.java, false, false)
-
+    @Inject lateinit var loginObject: LoginScreen
+    @Inject lateinit var startApp: LaunchApp
 
     @Given("user starts the application")
     fun userStartsTheApplication() {
-        mActivityRule.launchActivity(Intent())
+        startApp.startActivity()
         Allure.step("user starts the application")
     }
 
