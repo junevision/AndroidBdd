@@ -15,8 +15,6 @@ class CucumberTestRunner : CucumberAndroidJUnitRunner() {
         val tags: String = BuildConfig.TEST_TAGS
         val scenario: String = BuildConfig.TEST_SCENARIO
 
-        bundle?.putString("listener", "io.qameta.allure.kotlin.junit4.AllureJunit4")
-
         super.onCreate(bundle)
     }
 }

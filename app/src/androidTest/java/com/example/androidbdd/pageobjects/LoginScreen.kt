@@ -6,7 +6,6 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.example.androidbdd.R
-import com.example.androidbdd.utils.screenshot
 
 class LoginScreen {
 
@@ -16,12 +15,10 @@ class LoginScreen {
 
     fun enterEmail(email: String) {
         onView(withId(emailText)).perform(typeText(email))
-        screenshot()
     }
 
     fun enterPassword(password: String) {
         onView(withId(passwordText)).perform(typeText(password))
-        screenshot()
     }
 
     fun closeKeyboard() {
@@ -30,7 +27,6 @@ class LoginScreen {
 
     fun clickOnLoginButton() {
         onView(withId(loginButton)).perform(click())
-        screenshot()
     }
 
     fun isSuccessfulLogin() {
