@@ -1,5 +1,5 @@
 name: Android CI
-
+# on push we will trigger our code
 on:
   push:
     branches: [ master ]
@@ -8,8 +8,7 @@ on:
 
 jobs:
   build:
-
-    runs-on: macos-latest
+    runs-on: macos-latest # machine type
     strategy: # we are using strategy if we need to run on parallel with different devices and version
       matrix:
         api-level: [28] # Google api level 
@@ -27,8 +26,14 @@ jobs:
     - name: Run Espresso Tests
       uses: ReactiveCircus/android-emulator-runner@v2.22.0 # install and create the emulator
       with:
-          api-level: 28
-          target: default
+          api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
           arch: x86
           profile: Nexus 6
-          script: ./gradlew connectedDebugAndroidTest -Pcucumber -Ptags="@smoke"
+          disable-animations: true
+          script: ./gradlew connectedDebugAndroidTest -Pcucumber -Ptags="@smoke" --info # run test with info 
+    - name: Allure report
+      uses: afiore/action-allure-report@v0.1.0
+      with:
+        results-dir: /sdcard/Download/allure_results_demo
+        report-dir: ./allure_reports
